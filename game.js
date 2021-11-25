@@ -1,3 +1,10 @@
+// Declaring all DOM selectors.
+const buttons = document.querySelectorAll("button");
+const pScore = document.querySelector("#scorePlayer");
+const cScore = document.querySelector("#scoreComputer");
+const gameStatus = document.querySelector('#status');
+
+
 // Generates a random value for the computer's turn in the game.
 function computerPlay() {
     
@@ -17,73 +24,94 @@ function computerPlay() {
 
 // Plays a round of the game using player and computer input.
 function playRound(playerSelection, computerSelection) {
-    
-    // Filters player input to lower case for proper conditional checks.
-    playerSelection = playerSelection.toLowerCase();
-
-    // Logic used to return game-state conditions.
+    let newElement = document.createElement("div");
     if (playerSelection === computerSelection) {
+        newElement.textContent = "Tied!";
+        gameStatus.replaceChildren(newElement);
         return "tied!";
     } else if ((playerSelection === "rock" && computerSelection === "scissors") || 
         (playerSelection === "paper" && computerSelection === "rock") ||
         (playerSelection === "scissors" && computerSelection === "paper")) {
+            newElement.textContent = `You win, ${playerSelection} beats ${computerSelection}!`;
+            gameStatus.replaceChildren(newElement);
             return `You win, ${playerSelection} beats ${computerSelection}!`;
     } else {
+        newElement.textContent = `You lose, ${computerSelection} beats ${playerSelection}!`
+        gameStatus.replaceChildren(newElement);
         return `You lose, ${computerSelection} beats ${playerSelection}!`;
     }
-
 }
 
-// Main function used to initiate the game.
-function game() {
-    // Initialize the player score counter.
-    let playerScore = 0, computerScore = 0;
-    
-    // Core loop to process 5 rounds of the game.
-    for (let i = 1; i <= 5; i++) {
-        
-        // Initialize player and computer selection for following loop.
-        let playerSelection = "", computerSelection = "";
-        
-        // Loop ensures that the player inputs the proper value to commence the game.
-        while (true) {
-            playerSelection = prompt(`Round ${i}: Choose "rock", "paper", or "scissors"`);
-            playerSelection = playerSelection.toLowerCase();
-            if ((playerSelection != "rock") && (playerSelection != "paper") && (playerSelection != "scissors")) {
-                console.log("Please choose a valid selection");
-                continue;          
-            }
-            computerSelection = computerPlay();
-            break;
-        }
-
-        // Calls the playRound function and stores the end-game string into a variable
-        // and prints results to the console.
-        let round = playRound(playerSelection, computerSelection);
-        console.log(round);
-
-        // Scans through the end-game string to properly tally a win for either player
-        // or comuter.
-        if (round.includes('win') == true) {
-            playerScore ++;
-        } else if (round.includes('lose') == true) {
-            computerScore ++;
-        }
-
-        // Prints the current results of the 5 game series.
-        console.log(`Player: ${playerScore} - Computer: ${computerScore}`);
+function calcGameScore(roundResult) {
+    let newElement = document.createElement("div");
+    if (roundResult.includes('win') == true) {
+        playerScore ++;
+        newElement.textContent = `Player = ${playerScore}`;
+        pScore.replaceChild(newElement, pScore.firstElementChild);
+    } else if (roundResult.includes('lose') == true) {
+        computerScore ++;
+        newElement.textContent = `Computer = ${computerScore}`;
+        cScore.replaceChild(newElement, cScore.firstElementChild);
     }
+}
 
-    // Prints the final result of the game.
+function endGameScore(playerScore, computerScore) {
+    let newElement = document.createElement("div");
     if (playerScore > computerScore) {
+        newElement.textContent = 'Player Wins!';
+        gameStatus.replaceChildren(newElement);
         console.log(`Player wins!`);
     } else if (playerScore < computerScore) {
+        newElement.textContent = 'Computer Wins!';
+        gameStatus.replaceChildren(newElement);
         console.log(`Computer wins!`);
     } else {
+        newElement.textContent = 'Game is Tied!';
+        gameStatus.replaceChildren(newElement);
         console.log(`Game is tied!`);
     }
 }
 
+// Main function used to initiate the game.
+let playerScore = 0, computerScore = 0, roundCount = 1;
+
+function game(e) {
+
+    // Checks the start of the game to ensure no more than 5 rounds were played.
+    if (roundCount >= 6) {
+        return;
+    }
+    
+    // 
+    let computerSelection = computerPlay();
+    let playerSelection = this.id;
+    
+    // Calls the playRound function and stores the end-game string into a variable
+    // and prints results to the console.
+    let roundResult = playRound(playerSelection, computerSelection);
+    console.log(roundResult);
+
+    // Scans through the end-game string to properly tally a win for either player
+    // or comuter.
+    calcGameScore(roundResult);
+
+    // Prints the current results of the 5 game series.
+    console.log(`Player: ${playerScore} - Computer: ${computerScore}`);
+    
+    // Prints the final result of the game.
+    if (roundCount == 5) {
+        endGameScore(playerScore, computerScore)
+    }
+    roundCount ++;
+}
+
+
 // Initializes the game.
-game();
+// game();
+
+buttons.forEach(button => {
+    button.addEventListener('click', game);
+});
+
+
 
