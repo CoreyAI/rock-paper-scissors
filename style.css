@@ -1,0 +1,46 @@
+body {
+    background-color: black;
+    color: white;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: space-around;
+}
+
+button {
+    background-color: black;
+    border-color: white;
+    border-radius: 10%;
+    color: white;
+    font-size: 5vmin;
+    padding: 0.25em;
+}
+
+#status {
+    display: flex;
+    height: 25vmin;
+    font-size: 10vmin;
+    padding-bottom: 5vmin;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+}
+
+#buttons {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    gap: 3vmin;
+}
+
+#score {
+    display: flex;
+    column-gap: 2em;
+    font-size: 5vmin;
+    padding: 1.25em;
+}
